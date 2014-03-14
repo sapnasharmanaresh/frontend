@@ -10,11 +10,11 @@ import common.JsonComponent
 
 object LiveMatchesController extends MatchListController with CompetitionLiveFilters {
 
-  def liveMatchesJson() = liveMatches()
-  def liveMatches(): Action[AnyContent] =
-    renderLiveMatches(DateMidnight.now)
+  def matchDayJson() = matchDay()
+  def matchDay(): Action[AnyContent] =
+    renderMatchDay(DateMidnight.now)
 
-  private def renderLiveMatches(date: DateMidnight) = Action { implicit request =>
+  private def renderMatchDay(date: DateMidnight) = Action { implicit request =>
     val matches = new MatchDayList(Competitions())
     val page = new Page("football/live", "football", "Live matches", "GFE:Football:automatic:live matches")
     renderMatchList(page, matches, filters)
@@ -39,6 +39,31 @@ object LiveMatchesController extends MatchListController with CompetitionLiveFil
     val page = new Page("football", "football", "Today's matches", "GFE:Football:automatic:live matches")
     Cached(page) {
       JsonComponent(page, football.views.html.matchList.matchesComponent(matches))
+    }
+  }
+
+  def liveMatchesComponent = liveMatchComponent(None)
+  def competitionLiveMatchesComponent(competitionTag: String) = liveMatchComponent(Some(competitionTag))
+
+  private def liveMatchComponent(competitionTagOpt: Option[String]) = Action { implicit request =>
+    competitionTagOpt match {
+      case None =>
+        val matches = new LiveMatchesList(Competitions())
+        val page = new Page("football", "football", "Live matches", "GFE:Football:automatic:live matches")
+        Cached(60) {
+          JsonComponent(page, football.views.html.matchList.matchesComponent(matches))
+        }
+      case Some(competitionTag) => {
+        lookupCompetition(competitionTag).map { competition =>
+          val matches = new CompetitionLiveMatchesList(Competitions(), competition.id)
+          val page = new Page("football", "football", s"${competition.fullName} live matches", "GFE:Football:automatic:live matches")
+          Cached(60) {
+            JsonComponent(page, football.views.html.matchList.matchesComponent(matches))
+          }
+        }.getOrElse {
+          NotFound
+        }
+      }
     }
   }
 }

@@ -26,8 +26,8 @@ GET        /football/:tag/results/:year/:month/:day                             
 GET        /football/:tag/results                                                              football.controllers.ResultsController.tagResults(tag)
 GET        /football/:tag/results.json                                                         football.controllers.ResultsController.tagResultsJson(tag)
 
-GET        /football/live                                                                      football.controllers.LiveMatchesController.liveMatches()
-GET        /football/live.json                                                                 football.controllers.LiveMatchesController.liveMatchesJson()
+GET        /football/live                                                                      football.controllers.LiveMatchesController.matchDay()
+GET        /football/live.json                                                                 football.controllers.LiveMatchesController.matchDayJson()
 GET        /football/:competition/live                                                         football.controllers.LiveMatchesController.competitionMatches(competition)
 GET        /football/:competition/live.json                                                    football.controllers.LiveMatchesController.competitionMatchesJson(competition)
 
@@ -41,7 +41,8 @@ GET        /football/api/match-nav/:year/:month/:day/:home/:away                
 GET        /football/api/match-nav/:matchId.json                                               football.controllers.MoreOnMatchController.moreOnJson(matchId)
 GET        /football/api/match-nav/:matchId                                                    football.controllers.MoreOnMatchController.moreOn(matchId)
 
-GET        /football/api/match-day                                                             football.controllers.LiveMatchesController.matchDayComponent()
+GET        /football/api/live-matches                                                          football.controllers.LiveMatchesController.liveMatchesComponent()
+GET        /football/api/live-matches/:competition                                             football.controllers.LiveMatchesController.competitionLiveMatchesComponent(competition)
 
 GET        /football/competitions                                                              football.controllers.CompetitionListController.renderCompetitionList()
 GET        /football/competitions.json                                                         football.controllers.CompetitionListController.renderCompetitionListJson()
