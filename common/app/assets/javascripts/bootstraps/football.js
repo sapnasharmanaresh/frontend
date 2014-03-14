@@ -58,18 +58,19 @@ define([
         });
 
         page.isClockwatch(function(isLive) {
-            var ml = new MatchList('live', 'premierleague'),
+            var ml = new MatchList('premierleague'),
                 $img = $('.media-primary'),
                 matchListContainer = bonzo.create('<div class="football-match__list" data-link-name="football-matches-clockwatch"></div>');
 
             loading(matchListContainer, 'Fetching today\'s matches…', { text: 'Impatient?', href: '/football/live' });
 
             $img.addClass('u-h').after(matchListContainer);
-            ml.fetch(matchListContainer).fail(function() {
-                $img.removeClass('u-h');
-            }).always(function() {
-                loaded(matchListContainer);
-            });
+            ml.fetch(matchListContainer)
+                .fail(function() {
+                    $img.removeClass('u-h');
+                }).always(function() {
+                    loaded(matchListContainer);
+                });
         });
 
         // Binding

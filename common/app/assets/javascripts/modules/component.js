@@ -106,7 +106,22 @@ define([
 
             if (!self.destroyed) {
                 bonzo(parent).append(self.elem);
-                self._ready();
+                self._ready(parent, key);
+            }
+        });
+    };
+
+    Component.prototype._reFetch = function(parent, key) {
+        var self = this;
+        return this._fetch().then(function render(resp) {
+            var el = bonzo.create(resp[key || 'html'])[0];
+
+            if (!self.destroyed) {
+                self.remove();
+                self.elem = el;
+                self._prerender();
+                bonzo(parent).append(self.elem);
+                self._ready(parent, key);
             }
         });
     };
@@ -133,11 +148,11 @@ define([
     /**
      * This is just used to set up the component internally
      */
-    Component.prototype._ready = function() {
+    Component.prototype._ready = function(parent, key) {
         if (!this.destroyed) {
             this.rendered = true;
-            this._autoupdate();
             this.ready();
+            this._autoupdate(parent, key);
         }
     };
 
@@ -150,24 +165,24 @@ define([
     };
 
     /**
-     * Check if we should auto update, if so, do so
-     */
-    Component.prototype._autoupdate = function() {
-        if (this.autoupdate) {
-            setTimeout(function() {
-                this._fetch.then(function() {
-                    
-                })
-            }, (this.autoupdate*100))
-        }
-    };
-
-    /**
      * This is user to edit this.elem before it's rendered
      * This will help with the rendering performance that
      * we would lose if rendered then manipulated
      */
     Component.prototype.prerender = function() {};
+
+    /**
+     * Check if we should auto update, if so, do so. Requires
+     * an `autoupdate` timeout value (in ms) to be set
+     */
+    Component.prototype._autoupdate = function(parent, key) {
+        var self = this;
+        if (this.autoupdate) {
+            setTimeout(function() {
+                self._reFetch(parent, key);
+            }, (this.autoupdate));
+        }
+    };
 
     /**
      * Once the render / decorate methods have been called
@@ -276,14 +291,22 @@ define([
     };
 
     /**
-     * Removes all event listeners and removes the DOM elem
+     * Removes all event listeners and removes the DOM elem,
+     * does not destroy component
      */
-    Component.prototype.destroy = function() {
+    Component.prototype.remove = function() {
         if (this.elem) {
             bonzo(this.elem).remove();
             delete this.elem;
         }
         this.detach();
+    };
+
+    /**
+     * Removes all event listeners and removes the DOM elem
+     */
+    Component.prototype.destroy = function() {
+        this.remove();
         this.destroyed = true;
     };
 
