@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc._
 import common.ExecutionContexts
-import services.{IdRequestParser, IdentityUrlBuilder}
+import services.{IdentityRequest, IdRequestParser, IdentityUrlBuilder}
 import com.google.inject.{Inject, Singleton}
 import utils.SafeLogging
 import model.{NoCache, Cached, IdentityPage}
@@ -12,17 +12,26 @@ import com.gu.identity.model.{PrivateFields, PublicFields, User}
 import actions.AuthActionWithUser
 import play.filters.csrf.{CSRFCheck, CSRFAddToken}
 import form._
-import scala.concurrent.Future
+import scala.concurrent._
 import com.gu.identity.model.User
+import discussion.DiscussionApi
+import play.api.Plugin
+import conf.Configuration
 
 @Singleton
 class PublicProfileController @Inject()(idUrlBuilder: IdentityUrlBuilder,
                                         authActionWithUser: AuthActionWithUser,
                                         identityApiClient: IdApiClient,
-                                        idRequestParser: IdRequestParser)
+                                        idRequestParser: IdRequestParser
+                                      )
   extends Controller
   with ExecutionContexts
   with SafeLogging{
+
+  val discussionApi = new DiscussionApi {
+    protected val apiRoot = Configuration.discussion.apiRoot
+    override protected val clientHeaderValue: String = Configuration.discussion.apiClientHeader
+  }
 
   val page = IdentityPage("/profile/public", "Public profile", "public profile")
 
@@ -64,17 +73,30 @@ class PublicProfileController @Inject()(idUrlBuilder: IdentityUrlBuilder,
   }
 
   def publicProfilePage(vanityUrl: String) = Action.async { implicit request =>
+
+    for {
+      userFromVanityUrlResponse <- identityApiClient.userFromVanityUrl(vanityUrl)
+      result <- resultFromResponse(userFromVanityUrlResponse)
+    } yield result
+  }
+
+  def resultFromResponse(userResponse: client.Response[User])(implicit request: RequestHeader):Future[SimpleResult] = {
     val idRequest = idRequestParser(request)
-    identityApiClient.userFromVanityUrl(vanityUrl).map {
+    userResponse match {
       case Left(errors) => {
         logger.info(s"public profile page returned errors ${errors.toString()}")
-        NotFound(views.html.errors._404())
+        future { NotFound(views.html.errors._404()) }
       }
       case Right(user) => {
-        Cached(60)(Ok(views.html.public_profile_page(page, idRequest, idUrlBuilder, user)))
+        for {
+          comments <- discussionApi.commentsForUser(user.getId())
+        } yield {
+          Cached(60)(Ok(views.html.public_profile_page(page, idRequest, idUrlBuilder, user, comments)))
+        }
       }
     }
   }
+
 }
 
 case class ProfileForms(publicForm: Form[ProfileFormData], accountForm: Form[AccountFormData], isPublicFormActive: Boolean)

@@ -51,7 +51,7 @@ object Comment extends {
       id = (json \ "id").as[Int],
       body = (json \ "body").as[String],
       responses = getResponses(json),
-      profile = Profile(json),
+      profile = Profile("", "", "", false, false, None), // No idea...
       date = (json \ "isoDateTime").as[String].parseISODateTime,
       isHighlighted = (json \ "isHighlighted").as[Boolean],
       isBlocked = (json \ "status").as[String].contains("blocked"),

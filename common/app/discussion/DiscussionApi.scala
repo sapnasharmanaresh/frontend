@@ -1,12 +1,22 @@
 package discussion
 
-import common.{ExecutionContexts, Logging}
+import common.{Logging, ExecutionContexts}
 import scala.concurrent.Future
-import play.api.libs.json.{JsValue, JsArray, JsObject, JsNumber}
-import play.api.libs.ws.Response
-import discussion.model.{DiscussionKey, Profile, Comment, CommentCount, Switch}
+import play.api.libs.json.JsObject
 import play.api.mvc.Headers
+import play.api.libs.json.JsArray
+import play.api.libs.ws.Response
+import play.api.libs.json.JsNumber
+import play.api.libs.json.JsObject
 import discussion.util.Http
+import discussion.model._
+import play.api.libs.json.JsArray
+import play.api.libs.ws.Response
+import play.api.libs.json.JsNumber
+import discussion.model.CommentCount
+import play.api.libs.json.JsObject
+import akka.event.Logging
+import common.Logging
 
 trait DiscussionApi extends Http with ExecutionContexts with Logging {
 
@@ -62,7 +72,7 @@ trait DiscussionApi extends Http with ExecutionContexts with Logging {
       s"Error loading comment id: $id status: ${r.status} message: ${r.statusText}"
 
     getJsonOrError(apiUrl, onError) map {
-      json => 
+      json =>
         val comment = (json \ "comment")
         Comment(comment)
     }
@@ -78,6 +88,20 @@ trait DiscussionApi extends Http with ExecutionContexts with Logging {
 
   def topCommentsFor(key: DiscussionKey): Future[CommentPage] = {
     getJsonForUri(key, s"$apiRoot/discussion/$key/topcomments?pageSize=$pageSize&page=1&orderBy=newest&showSwitches=true")
+  }
+
+  def commentsForUser(userId: String): Future[Seq[Comment]] = {
+
+    def onError(r: Response) =
+      s"Discussion API: Error loading comments for user $userId : ${r.status} message: ${r.statusText}"
+
+    getJsonOrError(s"$apiRoot/profile/$userId/comments", onError) map {
+      json =>
+        val comments = (json \\ "comments")(0).asInstanceOf[JsArray].value map {
+          commentJson =>  Comment(commentJson)
+        }
+        comments
+    }
   }
 
   def commentContext(id: Int, orderBy: String = "newest"): Future[(DiscussionKey, String)] = {
@@ -109,14 +133,4 @@ trait DiscussionApi extends Http with ExecutionContexts with Logging {
     super.getJsonOrError(url, onError, headers :+ guClientHeader: _*)
 
   private def guClientHeader = ("GU-Client", clientHeaderValue)
-}
-
-object AuthHeaders {
-  val guIdToken = "GU-IdentityToken"
-  val cookie = "Cookie"
-  val all = Set(guIdToken, cookie)
-
-  def filterHeaders(headers: Headers): Map[String, String] = headers.toSimpleMap filterKeys {
-    all.contains
-  }
 }
