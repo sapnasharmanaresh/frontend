@@ -1,5 +1,6 @@
 .football-matches {
     margin-bottom: $gs-baseline*2;
+    position: relative;
 }
 
 .football-match {
@@ -118,6 +119,10 @@
             content: "v";
         }
     }
+}
+
+.js-on .football-matches tr {
+    cursor: pointer;
 }
 
 /* Footnotes */

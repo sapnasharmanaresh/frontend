@@ -89,13 +89,33 @@ define([
     };
 
     /**
-     * @param {Element} parent
-     * @param {string} key element to lookup from the response
+     * Throws an error if this is already attached to the DOM
      */
+    Component.prototype.checkAttached = function() {
+        if (this.rendered) {
+            throw new ComponentError('Already rendered');
+        }
+    };
+
     Component.prototype.fetch = function(parent, key) {
         this.checkAttached();
-        var self = this,
-            endpoint = this.endpoint,
+        var self = this;
+        return this._fetch().then(function render(resp) {
+            self.elem = bonzo.create(resp[key || 'html'])[0];
+            self._prerender();
+
+            if (!self.destroyed) {
+                bonzo(parent).append(self.elem);
+                self._ready();
+            }
+        });
+    };
+
+    /**
+     * @return Reqwest
+     */
+    Component.prototype._fetch = function() {
+        var endpoint = this.endpoint,
             opt;
 
         for (opt in this.options) {
@@ -107,26 +127,7 @@ define([
             type: 'json',
             method: 'get',
             crossOrigin: true
-        }).then(
-            function render(resp) {
-                self.elem = bonzo.create(resp[key || 'html'])[0];
-                self._prerender();
-
-                if (!self.destroyed) {
-                    bonzo(parent).append(self.elem);
-                    self._ready();
-                }
-            }
-        );
-    };
-
-    /**
-     * Throws an error if this is already attached to the DOM
-     */
-    Component.prototype.checkAttached = function() {
-        if (this.rendered) {
-            throw new ComponentError('Already rendered');
-        }
+        });
     };
 
     /**
@@ -135,6 +136,7 @@ define([
     Component.prototype._ready = function() {
         if (!this.destroyed) {
             this.rendered = true;
+            this._autoupdate();
             this.ready();
         }
     };
@@ -145,6 +147,19 @@ define([
     Component.prototype._prerender = function() {
         this.elems = {};
         this.prerender();
+    };
+
+    /**
+     * Check if we should auto update, if so, do so
+     */
+    Component.prototype._autoupdate = function() {
+        if (this.autoupdate) {
+            setTimeout(function() {
+                this._fetch.then(function() {
+                    
+                })
+            }, (this.autoupdate*100))
+        }
     };
 
     /**
