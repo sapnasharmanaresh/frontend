@@ -13,42 +13,42 @@ class ArticleControllerTest extends FlatSpec with Matchers {
   val callbackName = "aFunction"
 
   "Article Controller" should "200 when content type is article" in Fake {
-    val result = controllers.ArticleController.renderArticle(articleUrl)(TestRequest(articleUrl))
+    val result = controllers.ContentController.render(articleUrl)(TestRequest(articleUrl))
     status(result) should be(200)
   }
 
   it should "200 when content type is live blog" in Fake {
-    val result = controllers.ArticleController.renderArticle(liveBlogUrl)(TestRequest(liveBlogUrl))
+    val result = controllers.ContentController.render(liveBlogUrl)(TestRequest(liveBlogUrl))
     status(result) should be(200)
   }
 
   it should "count in body links" in Fake {
-    val result = controllers.ArticleController.renderArticle(liveBlogUrl)(TestRequest(liveBlogUrl))
+    val result = controllers.ContentController.render(liveBlogUrl)(TestRequest(liveBlogUrl))
     val body = contentAsString(result)
     body should include(""""inBodyInternalLinkCount": "38"""")
     body should include(""""inBodyExternalLinkCount": "42"""")
   }
 
   it should "200 when content type is sudoku" in Fake {
-    val result = controllers.ArticleController.renderArticle(sudokuUrl)(TestRequest(sudokuUrl))
+    val result = controllers.ContentController.render(sudokuUrl)(TestRequest(sudokuUrl))
     status(result) should be(200)
   }
 
   it should "not cache 404s" in Fake {
-    val result = controllers.ArticleController.renderArticle("oops")(TestRequest())
+    val result = controllers.ContentController.render("oops")(TestRequest())
     status(result) should be(404)
     header("Cache-Control", result).head should be ("no-cache")
   }
 
   it should "redirect for short urls" in Fake {
-    val result = controllers.ArticleController.renderArticle("p/39heg")(TestRequest("/p/39heg"))
+    val result = controllers.ContentController.render("p/39heg")(TestRequest("/p/39heg"))
     status(result) should be (302)
     header("Location", result).head should be ("/uk/2012/aug/07/woman-torture-burglary-waterboard-surrey")
   }
 
   // this does not work like this on V2 (yet) ...
   ignore should "redirect for short urls with Twitter suffix" in Fake {
-    val result = controllers.ArticleController.renderArticle("p/39heg/tw")(TestRequest("/p/39heg/tw"))
+    val result = controllers.ContentController.render("p/39heg/tw")(TestRequest("/p/39heg/tw"))
     status(result) should be (302)
     header("Location", result).head should be ("/uk/2012/aug/07/woman-torture-burglary-waterboard-surrey")
   }
@@ -56,7 +56,7 @@ class ArticleControllerTest extends FlatSpec with Matchers {
   it should "return JSONP when callback is supplied" in Fake {
     val fakeRequest = FakeRequest(GET, s"${articleUrl}?callback=$callbackName")
 
-    val result = controllers.ArticleController.renderArticle(articleUrl)(fakeRequest)
+    val result = controllers.ContentController.render(articleUrl)(fakeRequest)
     status(result) should be(200)
     contentType(result).get should be("application/javascript")
     contentAsString(result) should startWith(s"""$callbackName({\"config\"""")
@@ -66,29 +66,29 @@ class ArticleControllerTest extends FlatSpec with Matchers {
     val fakeRequest = FakeRequest("GET", s"${articleUrl}.json")
       .withHeaders("Origin" -> "http://www.theorigin.com")
       
-    val result = controllers.ArticleController.renderArticle(articleUrl)(fakeRequest)
+    val result = controllers.ContentController.render(articleUrl)(fakeRequest)
     status(result) should be(200)
     contentType(result).get should be("application/json")
     contentAsString(result) should startWith("{\"config\"")
   }
 
   it should "redirect to classic when content type is not supported in app" in Fake {
-    val result = controllers.ArticleController.renderArticle("world/interactive/2013/mar/04/choose-a-pope-interactive-guide")(TestRequest("/world/interactive/2013/mar/04/choose-a-pope-interactive-guide"))
+    val result = controllers.ContentController.render("world/interactive/2013/mar/04/choose-a-pope-interactive-guide")(TestRequest("/world/interactive/2013/mar/04/choose-a-pope-interactive-guide"))
     status(result) should be(303)
     header("Location", result).get should be("http://www.theguardian.com/world/interactive/2013/mar/04/choose-a-pope-interactive-guide?view=classic")
   }
 
   it should "internal redirect unsupported content to classic" in Fake {
-    val result = controllers.ArticleController.renderArticle("world/video/2012/feb/10/inside-tibet-heart-protest-video")(TestRequest("world/video/2012/feb/10/inside-tibet-heart-protest-video"))
+    val result = controllers.ContentController.render("world/iraq")(TestRequest("/world/iraq"))
     status(result) should be(200)
-    header("X-Accel-Redirect", result).get should be("/type/video/world/video/2012/feb/10/inside-tibet-heart-protest-video")
+    header("X-Accel-Redirect", result).get should be("/type/tag/world/iraq")
   }
 
   val expiredArticle = "football/2012/sep/14/zlatan-ibrahimovic-paris-st-germain-toulouse"
 
   // content api has stopped doing this, am finding out what is happening
   ignore should "display an expired message for expired content" in Fake {
-    val result = controllers.ArticleController.renderArticle(expiredArticle)(TestRequest(s"/$expiredArticle"))
+    val result = controllers.ContentController.render(expiredArticle)(TestRequest(s"/$expiredArticle"))
     status(result) should be(410)
     contentAsString(result) should include("Sorry - the page you are looking for has been removed")
   }
@@ -98,7 +98,7 @@ class ArticleControllerTest extends FlatSpec with Matchers {
     val fakeRequest = FakeRequest(GET, s"/${expiredArticle}?callback=${callbackName}")
       .withHeaders("host" -> "localhost:9000")
 
-    val result = controllers.ArticleController.renderArticle(expiredArticle)(fakeRequest)
+    val result = controllers.ContentController.render(expiredArticle)(fakeRequest)
     status(result) should be(200)
     contentType(result).get should be("application/javascript; charset=utf-8")
     contentAsString(result) should startWith(s"""${callbackName}({\"config\"""") // the callback

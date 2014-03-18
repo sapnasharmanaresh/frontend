@@ -11,9 +11,10 @@ import java.util.concurrent.TimeoutException
 object `package` extends implicits.Strings with implicits.Requests with play.api.mvc.Results {
 
 
-  def convertApiExceptions[T](implicit log: Logger): PartialFunction[Throwable, Either[T, SimpleResult]] = {
+  def convertApiExceptions[T](implicit log: Logger, r: RequestHeader): PartialFunction[Throwable, Either[T, SimpleResult]] = {
     case ApiError(404, message) =>
       log.info(s"Got a 404 while calling content api: $message")
+      log.info(RequestLog(r))
       Right(NoCache(NotFound))
     case ApiError(410, message) =>
       log.info(s"Got a 410 while calling content api: $message")

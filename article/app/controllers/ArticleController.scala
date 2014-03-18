@@ -12,21 +12,7 @@ import scala.concurrent.Future
 import scala.collection.JavaConversions._
 import implicits.ContentImplicits
 
-trait ArticleWithStoryPackage {
-  def article: Article
-  def storyPackage: List[Trail]
-}
-case class ArticlePage(article: Article, storyPackage: List[Trail]) extends ArticleWithStoryPackage
-case class LiveBlogPage(article: LiveBlog, storyPackage: List[Trail]) extends ArticleWithStoryPackage
-
 object ArticleController extends Controller with ExecutionContexts with ContentImplicits with Logging {
-
-  def renderArticle(path: String) = DogpileAction { implicit request =>
-    lookup(path) map {
-      case Left(model) => render(model)
-      case Right(other) => RenderOtherStatus(other)
-    }
-  }
 
   def renderLatestFrom(path: String, lastUpdateBlockId: String) = DogpileAction { implicit request =>
     lookup(path) map {
@@ -47,7 +33,7 @@ object ArticleController extends Controller with ExecutionContexts with ContentI
     }
   }
 
-  def renderLatest(path: String, lastUpdate: Option[String]) = lastUpdate map { renderLatestFrom(path, _) } getOrElse { renderArticle(path) }
+  def renderLatest(path: String, lastUpdate: Option[String]) = lastUpdate map { renderLatestFrom(path, _) } getOrElse { ContentController.render(path) }
 
   private def lookup(path: String)(implicit request: RequestHeader): Future[Either[ArticleWithStoryPackage, SimpleResult]] = {
     val edition = Edition(request)
@@ -73,15 +59,4 @@ object ArticleController extends Controller with ExecutionContexts with ContentI
     result recover convertApiExceptions
   }
 
-  private def render(model: ArticleWithStoryPackage)(implicit request: RequestHeader) = model match {
-    case blog: LiveBlogPage =>
-      val htmlResponse = () => views.html.liveBlog(blog)
-      val jsonResponse = () => views.html.fragments.liveBlogBody(blog)
-      renderFormat(htmlResponse, jsonResponse, model.article, Switches.all)
-
-    case article: ArticlePage =>
-      val htmlResponse = () => views.html.article(article)
-      val jsonResponse = () => views.html.fragments.articleBody(article)
-      renderFormat(htmlResponse, jsonResponse, model.article, Switches.all)
-  }
 }

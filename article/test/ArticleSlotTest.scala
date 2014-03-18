@@ -25,13 +25,13 @@ class ArticleSlotTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   val slotTest3 = "film/filmblog/2013/dec/18/hobbit-desolation-of-smaug-frozen-hunger-games"
 
   "Slot generation" should "create slots in an article body" in Fake {
-    val result = controllers.ArticleController.renderArticle(slotTest1)(TestRequest(slotTest1))
+    val result = controllers.ContentController.render(slotTest1)(TestRequest(slotTest1))
     val document = Jsoup.parse(contentAsString(result))
     document.select(".article-body .slot") should have size 10
   }
 
   it should "only create pre-header slots before h2 elements" in Fake {
-    val result = controllers.ArticleController.renderArticle(slotTest1)(TestRequest(slotTest1))
+    val result = controllers.ContentController.render(slotTest1)(TestRequest(slotTest1))
     val document = Jsoup.parse(contentAsString(result))
     val elements = document.select(".article-body .slot--preh2").asScala
 
@@ -45,7 +45,7 @@ class ArticleSlotTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   }
 
   it should "only create post-header slots after h2 elements" in Fake {
-    val result = controllers.ArticleController.renderArticle(slotTest1)(TestRequest(slotTest1))
+    val result = controllers.ContentController.render(slotTest1)(TestRequest(slotTest1))
     val document = Jsoup.parse(contentAsString(result))
     val elements = document.select(".article-body .slot--posth2").asScala
 
@@ -59,7 +59,7 @@ class ArticleSlotTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   }
 
   it should "create block slots after block image elements" in Fake {
-    val result = controllers.ArticleController.renderArticle(slotTest2)(TestRequest(slotTest2))
+    val result = controllers.ContentController.render(slotTest2)(TestRequest(slotTest2))
     val document = Jsoup.parse(contentAsString(result))
     val elements = document.select(".article-body .slot--block").asScala
 
@@ -74,7 +74,7 @@ class ArticleSlotTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   }
 
   it should "create block slots after video elements" in Fake {
-    val result = controllers.ArticleController.renderArticle(slotTest3)(TestRequest(slotTest3))
+    val result = controllers.ContentController.render(slotTest3)(TestRequest(slotTest3))
     val document = Jsoup.parse(contentAsString(result))
     val elements = document.select(".article-body .slot--block").asScala
 
@@ -88,7 +88,7 @@ class ArticleSlotTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   }
 
   it should "create spacing inbetween slots with a minimum length of 850" in Fake {
-    val result = controllers.ArticleController.renderArticle(slotTest1)(TestRequest(slotTest1))
+    val result = controllers.ContentController.render(slotTest1)(TestRequest(slotTest1))
     val document = Jsoup.parse(contentAsString(result))
     val elements = document.select(".slot--posth2, .slot--block").asScala
     val elementSiblings = document.select(".article-body").first.children.asScala

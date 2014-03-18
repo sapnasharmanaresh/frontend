@@ -11,7 +11,7 @@ object RequestLog {
 
   def apply(r: RequestHeader): String = Seq(
     r.headers.safe("X-Forwarded-For"),
-    r.host,
+    s"${r.host}${r.uri}",
     r.headers.safe("X-Gu-Edition"),
     r.headers.safe("X-GU-GeoLocation"),
     r.headers.safe("X-Gu-Xid"), // a unique id for this request

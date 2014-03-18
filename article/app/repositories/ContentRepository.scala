@@ -5,7 +5,7 @@ import conf.SwitchingContentApi
 import model.{Trail, Content}
 import com.gu.openplatform.contentapi.model.{ItemResponse, Content => ApiContent}
 import common._
-import play.api.mvc.RequestHeader
+import play.api.mvc.{SimpleResult, RequestHeader}
 import implicits.ContentImplicits
 
 
@@ -15,7 +15,7 @@ case class ContentWithStoryPackage(content: Content, storyPackage: Seq[Trail])
 trait ContentRepository extends ExecutionContexts with ContentImplicits with Logging {
 
 
-  def lookup(path: String)(implicit request: RequestHeader)  = {
+  def lookup(path: String)(implicit request: RequestHeader): Future[Either[ContentWithStoryPackage, SimpleResult]]  = {
     val response: Future[ItemResponse] = SwitchingContentApi().item(path, Edition(request))
       .showExpired(true)
       .showTags("all")

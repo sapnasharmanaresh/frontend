@@ -193,7 +193,6 @@ GET         /sections.json                                                      
 
 GET         /$path<[\w\d-]*(/[\w\d-]*)?/gallery/.*>/lightbox.json                                                    controllers.GalleryController.renderLightbox(path)
 GET         /$path<[\w\d-]*(/[\w\d-]*)?/gallery/.*>.json                                                             controllers.GalleryController.renderJson(path)
-GET         /$path<[\w\d-]*(/[\w\d-]*)?/gallery/.*>                                                                  controllers.GalleryController.render(path)
 
 GET         /$path<[\w\d-]*(/[\w\d-]*)?/(cartoon|graphic|picture)/.*>.json                                           controllers.ImageContentController.renderJson(path)
 GET         /$path<[\w\d-]*(/[\w\d-]*)?/(cartoon|graphic|picture)/.*>                                                controllers.ImageContentController.render(path)
@@ -206,4 +205,4 @@ GET         /$path<[\w\d-]*(/[\w\d-]*)?/(interactive|ng-interactive)/.*>        
 
 # Articles
 GET         /*path.json                                                                                              controllers.ArticleController.renderLatest(path, lastUpdate: Option[String])
-GET         /*path                                                                                                   controllers.ArticleController.renderArticle(path)
+GET         /*path                                                                                                   controllers.ContentController.render(path)

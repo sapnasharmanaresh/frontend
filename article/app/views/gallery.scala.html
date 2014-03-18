@@ -1,0 +1,7 @@
+@(gallery: model.Gallery, storyPackage: Seq[model.Trail], index: Int)(implicit request: RequestHeader)
+
+@main(gallery){ }{
+
+    @fragments.galleryBody(gallery, storyPackage, index)
+
+}
