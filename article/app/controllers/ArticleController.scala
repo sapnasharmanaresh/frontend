@@ -10,7 +10,7 @@ import views.support._
 import views.BodyCleaner
 import scala.concurrent.Future
 import scala.collection.JavaConversions._
-import play.api.templates.Html
+import implicits.ContentImplicits
 
 trait ArticleWithStoryPackage {
   def article: Article
@@ -19,7 +19,7 @@ trait ArticleWithStoryPackage {
 case class ArticlePage(article: Article, storyPackage: List[Trail]) extends ArticleWithStoryPackage
 case class LiveBlogPage(article: LiveBlog, storyPackage: List[Trail]) extends ArticleWithStoryPackage
 
-object ArticleController extends Controller with Logging with ExecutionContexts {
+object ArticleController extends Controller with ExecutionContexts with ContentImplicits with Logging {
 
   def renderArticle(path: String) = DogpileAction { implicit request =>
     lookup(path) map {

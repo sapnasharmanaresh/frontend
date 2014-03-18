@@ -3,7 +3,7 @@ package common
 import com.gu.openplatform.contentapi.model.ItemResponse
 import play.api.mvc.{ SimpleResult, RequestHeader, Results }
 import model._
-import implicits.ItemResponses
+import implicits.{ContentImplicits, ItemResponses}
 import java.net.URI
 
 // TODO 'Convention dictates that Left is used for failure and Right is used for success.'
@@ -40,7 +40,7 @@ private object ItemOrRedirect extends ItemResponses with Logging{
 
 // http://wiki.nginx.org/X-accel
 // this might have ended up at the wrong server if it has a 'funny' url
-private object InternalRedirect{
+private object InternalRedirect extends ContentImplicits {
 
   lazy val ShortUrl = """^(/p/.*)$""".r
 

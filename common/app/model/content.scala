@@ -12,8 +12,9 @@ import views.support.{Naked, ImgSrc}
 import views.support.StripHtmlTagsAndUnescapeEntities
 import play.api.libs.json.JsValue
 import conf.Configuration.facebook
+import implicits.ContentImplicits
 
-class Content protected (val apiContent: ApiContentWithMeta) extends Trail with MetaData {
+class Content protected (val apiContent: ApiContentWithMeta) extends Trail with MetaData with ContentImplicits {
 
   lazy val delegate: ApiContent = apiContent.delegate
 
@@ -154,7 +155,7 @@ class Content protected (val apiContent: ApiContentWithMeta) extends Trail with 
   override lazy val supporting: List[Content] = apiContent.supporting
 }
 
-object Content {
+object Content extends ContentImplicits {
 
   def apply(apiContent: ApiContentWithMeta): Content = {
     apiContent.delegate match {
@@ -241,7 +242,7 @@ object Content {
   }
 }
 
-class Article(content: ApiContentWithMeta) extends Content(content) {
+class Article(content: ApiContentWithMeta) extends Content(content) with ContentImplicits {
   lazy val body: String = delegate.safeFields.getOrElse("body","")
   lazy val contentType = "Article"
   lazy val isReview = tones.exists(_.id == "tone/reviews")
@@ -278,7 +279,7 @@ class Article(content: ApiContentWithMeta) extends Content(content) {
 
   override def cards: List[(String, Any)] = super.cards ++ List(
     "twitter:card" -> "summary_large_image"
-  ) ++ mainPicture.flatMap(_.largestImage.map( "twitter:image:src" -> _.path ))
+  ) ++ mainPicture.flatMap(_.largestImage.map( "twitter:image:src" -> _.path )).toList
 }
 
 class LiveBlog(content: ApiContentWithMeta) extends Article(content) {
@@ -288,6 +289,7 @@ class LiveBlog(content: ApiContentWithMeta) extends Article(content) {
   lazy val groupedBlocks: List[String]= soupedBody.select(".block").toList.grouped(10).map { group =>
     group.map(_.toString).mkString
   }.toList
+
   override def cards: List[(String, Any)] = super.cards ++ List(
     "twitter:card" -> "summary"
   )
@@ -395,7 +397,7 @@ class ImageContent(content: ApiContentWithMeta) extends Content(content) {
 
   override def cards: List[(String, Any)] = super.cards ++ List(
     "twitter:card" -> "photo"
-  ) ++ mainPicture.flatMap(_.largestImage.map( "twitter:image:src" -> _.path ))
+  ) ++ mainPicture.flatMap(_.largestImage.map( "twitter:image:src" -> _.path )).toList
 }
 
 case class ApiContentWithMeta(delegate: ApiContent, supporting: List[Content] = Nil, metaData: Map[String, JsValue] = Map.empty)

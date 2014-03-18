@@ -5,6 +5,7 @@ import conf._
 import model._
 import play.api.mvc.{ RequestHeader, Controller, Action }
 import views.support.RenderOtherStatus
+import implicits.ContentImplicits
 
 case class GalleryPage(
   gallery: Gallery,
@@ -12,7 +13,7 @@ case class GalleryPage(
   index: Int,
   trail: Boolean)
 
-object GalleryController extends Controller with Logging with ExecutionContexts {
+object GalleryController extends Controller with ExecutionContexts with ContentImplicits with Logging  {
 
   def renderJson(path: String) = render(path)
   def render(path: String) = Action.async { implicit request =>

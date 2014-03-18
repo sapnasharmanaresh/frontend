@@ -7,11 +7,12 @@ import model._
 import play.api.mvc.{ Content => _, _ }
 import scala.concurrent.Future
 import views.support.RenderOtherStatus
+import implicits.ContentImplicits
 
 
 case class VideoPage(video: Video, storyPackage: List[Trail])
 
-object VideoController extends Controller with Logging with ExecutionContexts {
+object VideoController extends Controller with ExecutionContexts with ContentImplicits with Logging {
 
   def renderJson(path: String) = render(path)
   def render(path: String) = Action.async { implicit request =>

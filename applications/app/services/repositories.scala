@@ -12,6 +12,7 @@ import controllers.ImageContentPage
 import scala.concurrent.Future
 import play.api.mvc.{RequestHeader, SimpleResult}
 import com.gu.openplatform.contentapi.ApiError
+import implicits.ContentImplicits
 
 object IndexPagePagination {
   def pageSize: Int = 20 //have a good think before changing this
@@ -123,7 +124,7 @@ trait Index extends ConciergeRepository with QueryDefaults {
   val SeriesInSameSection = """(series/[\w\d\.-]+)""".r
 }
 
-trait ImageQuery extends ConciergeRepository with QueryDefaults {
+trait ImageQuery extends ConciergeRepository with QueryDefaults with ContentImplicits {
 
   def image(edition: Edition, path: String): Future[Either[ImageContentPage, SimpleResult]]= {
     log.info(s"Fetching image content: $path for edition ${edition.id}")
