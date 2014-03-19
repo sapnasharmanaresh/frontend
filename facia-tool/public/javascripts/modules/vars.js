@@ -49,7 +49,9 @@ define(['knockout'], function(ko) {
             showStats: 1,
             width: 100,
             height: 35
-        }
+        },
+
+        externalIdPrefix : "external/"
     };
 
     function sparksBaseUrl(args) {

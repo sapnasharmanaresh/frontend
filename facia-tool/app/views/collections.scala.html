@@ -29,7 +29,9 @@
     </div>
 
     <div class="left-col">
-        <div class="title">Clipboard</div>
+        <div class="title">
+            Clipboard <a data-bind="click: createExternalContent">+</a>
+        </div>
         <div class="clipboard__wrapper" data-bind="with: clipboard">
             <div class="clipboard droppable" data-bind="
                 makeDropabble: true,

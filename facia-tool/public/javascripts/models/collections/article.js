@@ -25,7 +25,9 @@ define([
 
             opts = opts || {};
 
-            this.id = opts.id;
+            this.id = opts.id || vars.CONST.externalIdPrefix + new Date().getTime();
+            this.isExternal = this.id.indexOf(vars.CONST.externalIdPrefix) === 0;
+
             this.parent = opts.parent;
             this.parentType = opts.parentType;
 

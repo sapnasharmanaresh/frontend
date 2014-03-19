@@ -18,6 +18,8 @@ function (
         if(result) {
             populate(result, item);
             defer.resolve(result);
+        } else if (item.isExternal) {
+            defer.resolve();
         } else {
             fetchData([item.id])
             .done(function(result){
@@ -65,7 +67,7 @@ function (
             });
 
             _.each(items, function(item){
-                item.state.isEmpty(!item.state.isLoaded());
+                item.state.isEmpty(!(item.state.isLoaded() || item.isExternal));
             });
         });
     }

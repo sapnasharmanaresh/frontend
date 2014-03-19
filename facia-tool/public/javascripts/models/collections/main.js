@@ -55,6 +55,13 @@ define([
             keepCopy:  true
         });
 
+        model.createExternalContent = function() {
+            var snap = new Article();
+            snap.open();
+            model.clipboard.items.push(snap);
+            _.defer(updateScrollables);
+        };
+
         model.setFront = function(id) {
             model.front(id);
         };
