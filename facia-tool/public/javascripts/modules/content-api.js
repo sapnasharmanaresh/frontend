@@ -11,6 +11,8 @@ function (
     cache,
     icc
 ){
+    var apiPageSize = vars.CONST.apiPageSize || 50;
+
     function validateItem (item) {
         var result = cache.get('contentApi', item.id),
             defer = $.Deferred();
@@ -40,6 +42,13 @@ function (
     }
 
     function decorateItems (items) {
+        if (items.length) {
+            decorateItemsBatch(_.first(items, apiPageSize));
+            decorateItems(_.rest(items, apiPageSize));
+        }
+    }
+
+    function decorateItemsBatch (items) {
         var ids = [];
 
         items.forEach(function(item){
@@ -51,6 +60,8 @@ function (
             }
         });
 
+        if (!ids.length) { return; }
+
         fetchData(ids)
         .done(function(results){
             results.forEach(function(article) {
@@ -60,7 +71,7 @@ function (
 
                 cache.put('contentApi', id, article);
                 _.filter(items, function(item){
-                    return item.id === id || item.id === article.id;
+                    return item.id === id || item.id === article.id; // TODO: remove 2nd clause after full transition to internal-code/content/... IDs
                 }).forEach(function(item){
                     populate(article, item);
                 });
@@ -73,7 +84,7 @@ function (
     }
 
     function populate(opts, article) {
-        article.populate(opts, true);
+        article.populate(opts);
     }
 
     function fetchData(ids) {
@@ -81,8 +92,8 @@ function (
             defer = $.Deferred();
 
         if (ids.length) {
-            apiUrl = vars.CONST.apiSearchBase + "/search?format=json&show-fields=all";
-            apiUrl += "&ids=" + ids.map(function(id){
+            apiUrl = vars.CONST.apiSearchBase + '/search?format=json&show-fields=all&page-size=' + apiPageSize;
+            apiUrl += '&ids=' + ids.map(function(id){
                 return encodeURIComponent(id);
             }).join(',');
 
