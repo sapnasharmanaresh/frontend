@@ -80,7 +80,7 @@ class PublicProfileController @Inject()(idUrlBuilder: IdentityUrlBuilder,
 
   def renderPublicProfilePage(futureUser: => Future[Response[User]]) = Action.async {
     implicit request =>
-      futureUser map {
+      futureUser flatMap {
         case Left(errors) =>
           logger.info(s"public profile page returned errors ${errors.toString()}")
           NotFound(views.html.errors._404())
