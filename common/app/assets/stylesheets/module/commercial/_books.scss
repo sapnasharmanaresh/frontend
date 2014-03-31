@@ -2,247 +2,192 @@
    Books component
    ========================================================================== */
 
-.commercial.books-component {
-    background-color: #ffffff;
-}
-
-.books-component {
-    .commercial__head {
-        background-color: #ffffff;
-        border-top: 1px solid $c-neutral4;
+.commercial--books {
+    background-color: $commercial-component-bg;
+    @include rem((
+        padding: $gs-baseline $gs-gutter/2
+    ));
+    @include mq(mobileLandscape) {
         @include rem((
-            height: 40px
+            padding-left: $gs-gutter,
+            padding-right: $gs-gutter
         ));
     }
-    .container__border {
-        border-top: 1px solid $c-neutral4;
-    }
-    .container__title {
-        background: none !important;
-        padding: 0;
-        margin-top: ($gs-baseline/3);
-        float: none;
-    }
-    .container__logo {
-        width: 98px;
-        height: 24px;
-        display: inline-block;
-        @include background-size(contain);
-        @include fs-headline(4);
-        color: transparent;
 
-        &.svg-i-bookshop-logo--bookshop {
-            margin-left: -14px;
+    .commercial__branding,
+    .commercial__header {
+        overflow: hidden;
+    }
+    .commercial__branding {
+        float: left;
+    }
+    .commercial__logo {
+        margin: 0;
+        @include rem((
+            height: 24px
+        ));
+
+        .i:nth-child(2) {
+            margin-left: -4px
         }
     }
+    .commercial__title {
+        @include rem((
+            margin: $gs-baseline 0 0
+        ));
+    }
+    $cta-diameter: 32px;
+    .commercial__call-to-action {
+        position: relative;
+        padding-left: $cta-diameter+5;
+        line-height: $cta-diameter;
+        clear: right;
+        @include font-size(14, 32);
+
+        .i-filter-arrow-down {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: $cta-diameter;
+            height: $cta-diameter;
+            background-position: center;
+            background-color: $c-newsDefault;
+            border-radius: 50%;
+            @include transform(rotate(-90deg));
+        }
+    }
+
     .commercial__body {
         padding: 0;
-
-        h3 {
-            padding: $gs-baseline/2 0 ($gs-baseline/3)*2 0;
-            margin-bottom: 0;
-            @include fs-headline(2);
-        }
+        @include rem((
+            margin-top: $gs-baseline*2
+        ));
     }
-    .list {
-        padding: 0;
-        overflow: hidden;
+    .lineitem:first-child .lineitem__img {
+        display: block;
     }
-    .list__item {
-        @include box-sizing(border-box);
-        position: relative;
-        padding: 8px 0 0 30px;
+    .lineitem__link {
+        width: 68%;
+    }
 
+    .lineitem__meta {
         color: $c-neutral1;
-        @include fs-headline(1);
-
-        &:first-child .list__img {
-            display: block;
-        }
-        + .list__item {
-            border-top: 1px solid $c-neutral4;
-        }
-     }
-    .list__link {
-        width: 80%;
-        display: inline-block;
+        @include fs-textsans(1);
+    }
+    .commercial--books__price {
+        @include rem((
+            margin-top: $gs-baseline/2,
+            margin-bottom: 0
+        ));
+    }
+    .commercial--books__price__rrp,
+    .commercial--books__price__our {
+        display: block;
         color: $c-neutral1;
-        overflow: hidden;
-    }
-    .list__count {
-        position: absolute;
-        top: 2px;
-        left: 0;
-        color: $c-neutral4;
-        @include fs-headline(7);
-    }
-    .list__img {
-        height: 90px;
-        display: none;
-        margin-right: ($gs-baseline/3)*2;
-        float: left;
-        text-align: center;
-
-        .responsive-img {
-            width: auto;
-            height: 100%;
-        }
-    }
-    .list__title {
-        color: $c-neutral1;
-        @include fs-bodyCopy(1);
-        font-weight: normal;
-        text-overflow: ellipsis;
-        white-space: pre;
-        overflow: hidden;
-    }
-    .list__author {
-        margin-bottom: 0;
-        color: #8f8f8f;
         @include fs-data(3);
     }
-    .list__price {
-        width: 18%;
-        display: inline-block;
-        margin-bottom: 0;
-        vertical-align: top;
-        text-align: right;
-        @include fs-data(3);
-    }
-    .list__price__label {
-        display: none;
-    }
-    .commercial__foot {
-        padding: ($gs-baseline/3)*2 0;
-        border: 0;
-        margin: 0;
-        overflow: hidden;
-    }
-    .commercial__search {
-        position: relative;
-        width: 100%;
-        margin-bottom: 0;
-        float: right;
-        overflow: hidden;
-    }
-    .commercial__search__input {
-        @include box-sizing(border-box);
-        width: 100%;
-        height: 32px;
-        padding: $gs-baseline/3 32px $gs-baseline/3 ($gs-baseline/3) * 2;
-        border: 1px solid $c-neutral4;
-        @include fs-bodyCopy(1);
-        float: left;
-        overflow: hidden;
-
-        &:hover,
-        &:focus {
-            border-color: $c-neutral4;
-            outline: none;
-        }
-    }
-    .commercial__search__submit {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 32px;
-        height: 32px;
-        background-color: $c-neutral4;
-        background-position: center center;
-        padding: 0;
-        border: none;
+    .commercial--books__price__our {
         font-weight: bold;
-
-        &:hover,
-        &:focus {
-            background-color: $c-neutral4;
-            outline: none;
-        }
-
-        &:active {
-            background-color: darken($c-neutral4, 5%);
-            outline: none;
-        }
+    }
+    .commercial--books__buy-now-button {
+        background-color: #e657af;
+        border: none;
+        float: right;
+        color: #ffffff;
+        text-align: center;
+        @include f-header;
+        @include font-size(12, 20);
+        @include rem((
+            padding: 0 $gs-gutter/2,
+            min-width: 60px
+        ));
     }
 
-    @include mq($to: tablet) {
-        .commercial__body,
-        .commercial__foot {
-            display: block;
-        }
+    .commercial__foot {
+        padding: 0;
     }
 
     @include mq(tablet) {
-        .commercial__search {
-            width: 40%;
-        }
-        .list__item {
-            width: 20%;
-            padding-left: 8px;
-            float: left;
-
-            + .list__item {
-                border-top: none;
-                border-left: 1px solid $c-neutral5;
-            }
-        }
-        .list__img {
-            height: 100px;
-            margin-bottom: $gs-baseline;
-            display: block;
+        .commercial__branding {
             float: none;
         }
-        .list__link {
+        .commercial__header {
+            float: left;
+            width: gs-span(3);
+            @include rem((
+                margin-right: $gs-gutter
+            ));
+        }
+        .commercial__search {
+            position: relative;
+            float: none;
             width: 100%;
+            @include rem((
+                margin-top: $gs-baseline
+            ));
         }
-        .list__title {
-            white-space: nowrap;
-            clear: both;
+        .commercial__call-to-action {
+            position: absolute;
+            @include rem((
+                bottom: $gs-baseline
+            ));
         }
-        .list__count {
-            left: 8px;
+        .commercial__body {
+            margin-top: 0;
         }
-        .list__price {
-            width: 100%;
-            margin-top: $gs-baseline/2;
-            text-align: left;
-        }
+        .lineitem {
+            position: relative;
+            width: 33%;
+            @include rem((
+                min-height: 250px,
+                padding-bottom: 30px
+            ));
 
-        .list__price__label {
+            &:nth-child(n+4) {
+                display: none;
+            }
+        }
+        .lineitem__link,
+        .commercial--books__price {
+            width: 100%;
+        }
+        .commercial--books__price {
+            text-align: left;
+            @include rem((
+                margin-top: $gs-baseline/2
+            ));
+        }
+        .commercial--books__price__label {
             display: inline;
         }
-    }
-
-    @include mq($from: tablet, $to: leftCol) {
-        .commercial__body h3 {
+        .commercial--books__buy-now-button {
             position: absolute;
-            top: 0;
-            right: 0;
+            bottom: 0;
+            left: 8px;
+        }
+        .commercial__foot {
+            display: none;
         }
     }
+    @include mq(desktop) {
+        .lineitem {
+            width: 25%;
 
-    @include mq($from: leftCol, $to: wide) {
-        .container__title {
-            padding: $gs-baseline/3 0 ($gs-baseline/3)*2 0;
-            float: left;
-
-            .svg-i-bookshop-logo--bookshop {
-                margin-left: 0;
+            &:nth-child(4) {
                 display: block;
             }
         }
     }
-
-    @include mq(desktop) {
-        .list__title {
-            white-space: normal;
-        }
-    }
-
     @include mq(wide) {
-        .container__title {
-            padding: $gs-baseline/3 0 ($gs-baseline/3)*2 0;
-            float: left;
+        .commercial__header {
+            width: gs-span(4);
+        }
+        .lineitem {
+            width: 20%;
+
+            &:nth-child(5) {
+                display: block;
+            }
         }
     }
 }

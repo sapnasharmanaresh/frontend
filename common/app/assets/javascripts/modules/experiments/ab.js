@@ -5,44 +5,21 @@ define([
     'common/modules/analytics/mvt-cookie',
 
     //Current tests
-    'common/modules/experiments/tests/aa',
-    'common/modules/experiments/tests/recommended-right-hand',
-    'common/modules/experiments/tests/geo-most-popular',
-    'common/modules/experiments/tests/uk-containers',
-    'common/modules/experiments/tests/us-containers',
-    'common/modules/experiments/tests/au-containers',
-    'common/modules/experiments/tests/fronts-latest-reviews-card',
-    'common/modules/experiments/tests/fronts-cartoon-card',
-    'common/modules/experiments/tests/fronts-missed-card',
-    'common/modules/experiments/tests/fronts-live-card'
+    'common/modules/experiments/tests/external-links-new-window',
+    'common/modules/experiments/tests/abcd'
 ], function (
     common,
     store,
     mediator,
     mvtCookie,
-    Aa,
-    RightHandRecommendations,
-    GeoMostPopular,
-    UkContainers,
-    UsContainers,
-    AuContainers,
-    FrontsLatestReviewsCard,
-    FrontsCartoonCard,
-    FrontsMissedCard,
-    FrontsLiveCard
+
+    ExternalLinksNewWindow,
+    Abcd
 ) {
 
     var TESTS = [
-            new Aa(),
-            new RightHandRecommendations(),
-            new GeoMostPopular(),
-            new UkContainers(),
-            new UsContainers(),
-            new AuContainers(),
-            new FrontsLatestReviewsCard(),
-            new FrontsCartoonCard(),
-            new FrontsMissedCard(),
-            new FrontsLiveCard()
+            new ExternalLinksNewWindow(),
+            new Abcd()
        ],
        participationsKey = 'gu.ab.participations';
 
@@ -67,10 +44,6 @@ define([
         var participations = getParticipations();
         delete participations[test.id];
         store.local.set(participationsKey, participations);
-    }
-
-    function clearParticipations() {
-        return store.local.remove(participationsKey);
     }
 
     function cleanParticipations(config) {
@@ -176,7 +149,7 @@ define([
             addParticipation(test, variantIds[testVariantId]);
 
         } else {
-            addParticipation(test, "notintest");
+            addParticipation(test, 'notintest');
         }
     }
 
@@ -267,9 +240,9 @@ define([
             try {
                 getActiveTests().forEach(function (test) {
 
-                    if (isParticipating(test)) {
+                    if (isParticipating(test) && testCanBeRun(test, config)) {
                         var variant = getTestVariant(test.id);
-                        if (isTestSwitchedOn(test, config) && variant && variant !== 'notintest') {
+                        if (variant && variant !== 'notintest') {
                             abLogObject['ab' + test.id] = variant;
                         }
                     }

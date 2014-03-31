@@ -2,8 +2,8 @@
 @import conf.Switches._
 
 @defining(page.video){ video =>
-    <h2 class="article__zone left-col-deport tone-@VisualTone(video) tone-accent-border">
-        <span class="left-col-deport__body">
+    <h2 class="article__zone left-col-deport tone-@VisualTone(video) tone-accent-border hide-on-mobile-if-localnav">
+        <span class="left-col-deport__body" data-component="meta">
             <a class="tone-colour tone-border" data-link-name="article section" href="/@LinkTo(video.section)">@Html(video.sectionName.toLowerCase)</a>
         </span>
     </h2>
@@ -14,7 +14,9 @@
             <div class="article__inner article__inner--head">
                 <header class="article__head">
                     @fragments.headline(video.headline)
-                    <div class="js-comment-count"></div>
+                    @if(video.isCommentable) {
+                        <div class="article__head__comment-count js-comment-count"></div>
+                    }
                 </header>
             </div>
             <div class="article__columning-wrapper">
@@ -46,19 +48,17 @@
 
                     @fragments.contentMeta(video)
 
-                    <div class="article__container">
+                    <div class="article__container" data-component="body">
                         <div class="video-standfirst">
                             @fragments.standfirst(video)
                         </div>
 
-                        @if(ArticleKeywordsSwitch.isSwitchedOn){
-                            <div class="article__keywords" data-link-name="video keywords">
-                                @fragments.keywordList(video.keywords)
-                            </div>
-                        }
+                        <div class="article__keywords" data-link-name="video keywords">
+                            @fragments.keywordList(video.keywords)
+                        </div>
                     </div>
 
-                    <div class="social-wrapper">
+                    <div class="social-wrapper" data-component="share">
                         @fragments.social(video)
                     </div>
                 </div>
@@ -73,6 +73,6 @@
 
     @fragments.storyPackagePlaceholder(page.storyPackage)
 
-    @fragments.mostPopularPlaceholder(video.section)
+    @fragments.mostPopularPlaceholder(video.section, VisualTone(video))
 
 }

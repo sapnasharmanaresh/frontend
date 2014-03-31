@@ -10,7 +10,7 @@ define([
     detect
 ) {
 
-    function Sections(config) {
+    function Sections() {
         var className = 'is-off',
             that = this,
             hasCrossedBreakpoint = detect.hasCrossedBreakpoint(),
@@ -32,7 +32,7 @@ define([
                     return;
                 }
 
-                mediator.addListener('window:resize', function(e) {
+                mediator.addListener('window:resize', function() {
                     hasCrossedBreakpoint(function(layoutMode) {
 
                         bonzo(sectionsHeader).addClass(className);
@@ -53,7 +53,7 @@ define([
                 }
             },
 
-            showColumns : function(sectionsHeader, sectionsNav) {
+            showColumns : function(sectionsHeader) {
                 common.$g('.nav__item', sectionsHeader).removeClass('u-h');
             },
 
@@ -72,20 +72,11 @@ define([
                 for(var i=0, l=visibleItems.length; i < l; i++) {
                     bonzo(popupItems[i]).addClass('u-h');
                 }
-            },
-
-            // there is not a 'no javascript' version of this.
-            upgradeLocalNav: function(context) {
-                if (context.querySelector('.js-localnav--small')) {
-                    common.$g('#preloads').addClass('has-localnav');
-                    common.$g('.js-localnav--small').removeClass('is-hidden');
-                }
             }
         };
 
         this.init = function (context) {
             this.view.bindings(context);
-            this.view.upgradeLocalNav(context);
         };
      }
 

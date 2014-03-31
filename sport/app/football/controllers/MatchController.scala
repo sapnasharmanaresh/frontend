@@ -57,13 +57,13 @@ object MatchController extends Controller with Football with Requests with Loggi
       val page: Future[MatchPage] = lineup map { MatchPage(theMatch, _) }
 
       page map { page =>
-        val htmlResponse = () => football.views.html.footballMatch(page)
-        val jsonResponse = () => football.views.html.fragments.footballMatchBody(page)
-        renderFormat(htmlResponse, jsonResponse, page, Switches.all)
+        val htmlResponse = () => football.views.html.matchStats.matchStatsPage(page)
+        val jsonResponse = () => football.views.html.matchStats.matchStatsComponent(page)
+        renderFormat(htmlResponse, jsonResponse, page)
       }
     }
 
-    // we do not keep historical data, so just redirect old stuff to the results page
-    response.getOrElse(Future { Found("/football/results") })
+    // we do not keep historical data, so just redirect old stuff to the results page (see also MatchController)
+    response.getOrElse(Future.successful(Found("/football/results")))
   }
 }

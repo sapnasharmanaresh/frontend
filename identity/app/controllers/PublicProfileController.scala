@@ -6,9 +6,8 @@ import services.{IdentityRequest, IdRequestParser, IdentityUrlBuilder}
 import com.google.inject.{Inject, Singleton}
 import utils.SafeLogging
 import model.{NoCache, Cached, IdentityPage}
-import play.api.data.{Forms, Form}
-import idapiclient.{IdApiClient, UserUpdate}
-import com.gu.identity.model.{PrivateFields, PublicFields, User}
+import play.api.data.Form
+import idapiclient.IdApiClient
 import actions.AuthActionWithUser
 import play.filters.csrf.{CSRFCheck, CSRFAddToken}
 import form._
@@ -17,6 +16,7 @@ import com.gu.identity.model.User
 import discussion.DiscussionApi
 import play.api.Plugin
 import conf.Configuration
+import client.Response
 
 @Singleton
 class PublicProfileController @Inject()(idUrlBuilder: IdentityUrlBuilder,
@@ -72,29 +72,30 @@ class PublicProfileController @Inject()(idUrlBuilder: IdentityUrlBuilder,
     }
   }
 
-  def publicProfilePage(vanityUrl: String) = Action.async { implicit request =>
+  def renderProfileFromVanityUrl(vanityUrl: String) = renderPublicProfilePage(
+    identityApiClient.userFromVanityUrl(vanityUrl)
+  )
 
-    for {
-      userFromVanityUrlResponse <- identityApiClient.userFromVanityUrl(vanityUrl)
-      result <- resultFromResponse(userFromVanityUrlResponse)
-    } yield result
-  }
+  def renderProfileFromId(id: String) = renderPublicProfilePage(identityApiClient.user(id))
 
-  def resultFromResponse(userResponse: client.Response[User])(implicit request: RequestHeader):Future[SimpleResult] = {
-    val idRequest = idRequestParser(request)
-    userResponse match {
-      case Left(errors) => {
-        logger.info(s"public profile page returned errors ${errors.toString()}")
-        future { NotFound(views.html.errors._404()) }
+  def renderPublicProfilePage(futureUser: => Future[Response[User]]) = Action.async {
+    implicit request =>
+      futureUser map {
+        case Left(errors) =>
+          logger.info(s"public profile page returned errors ${errors.toString()}")
+          NotFound(views.html.errors._404())
+
+        case Right(user) =>
+          val idRequest = idRequestParser(request)
+
+          for {
+            comments <- discussionApi.commentsForUser(user.getId())
+          } yield {
+            Cached(60)(Ok(views.html.public_profile_page(page, idRequest, idUrlBuilder, user, comments)))
+          }
+
+          //Cached(60)(Ok(views.html.public_profile_page(page, idRequest, idUrlBuilder, user)))
       }
-      case Right(user) => {
-        for {
-          comments <- discussionApi.commentsForUser(user.getId())
-        } yield {
-          Cached(60)(Ok(views.html.public_profile_page(page, idRequest, idUrlBuilder, user, comments)))
-        }
-      }
-    }
   }
 
 }
