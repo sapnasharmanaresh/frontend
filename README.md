@@ -17,6 +17,13 @@ On the server
 * The average response time of any endpoint is less than 500ms.
 * Requests that take longer than 2 seconds will be terminated.
 
+On the server
+-------------
+
+* No more that 3 XHR requests per page.
+* One base CSS request (50kb) and one JS request (100kb) per page.
+* All 3rd party JavaScript must be loaded asynchronously. Each 
+
 New developers quick-start
 ===========================
 Frontend is a set of Play Framework 2 Scala applications.
