@@ -313,6 +313,11 @@ object Switches extends Collections {
     safeState = Off, sellByDate = new DateMidnight(2014, 4, 21)
   )
 
+  val ABInlineContent = Switch("A/B Tests", "ab-inline-content",
+    "If this switch is on the inline content AB-test will run",
+    safeState = Off, sellByDate = new DateMidnight(2014, 4, 16)
+  )
+
   // Dummy Switches
 
   val IntegrationTestSwitch = Switch("Unwired Test Switch", "integration-test-switch",
@@ -426,6 +431,7 @@ object Switches extends Collections {
     ABExternalLinksNewWindow,
     ABAbcd,
     FootballLiveblogTruncation,
+    ABInlineContent,
     MemcachedSwitch,
     IncludeBuildNumberInMemcachedKey
   )
