@@ -191,7 +191,7 @@ $soulmates-red: #d70851;
         height: $search-submit-cta-diameter;
         margin-top: -($search-submit-cta-diameter/2);
         background-color: $soulmates-red;
-        @include rounded-corners(50%);
+        @include rounded-corners($search-submit-cta-diameter/2);
 
         .i {
             display: none;

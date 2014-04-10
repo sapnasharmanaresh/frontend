@@ -57,7 +57,7 @@
 }
 
 .i--circle {
-    @include rounded-corners(50%);
+    @include rounded-corners(1000px);
     display: block;
     position: relative;
 }

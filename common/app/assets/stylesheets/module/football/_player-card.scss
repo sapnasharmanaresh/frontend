@@ -23,18 +23,21 @@ $player-card-avatar: (
     float: right;
 }
 .player-card__image {
-    @include rounded-corners(50%);
+    $defaultSize: map-get($player-card-avatar, default);
     @include rem((
-        height: map-get($player-card-avatar, default),
-        width: map-get($player-card-avatar, default)
+        height: $defaultSize,
+        width: $defaultSize
     ));
+    @include rounded-corners($defaultSize/2);
     float: right;
 
     @include mq(mobileLandscape) {
+        $landscapeSize: map-get($player-card-avatar, mobileLandscape);
         @include rem((
-            height: map-get($player-card-avatar, mobileLandscape),
-            width: map-get($player-card-avatar, mobileLandscape)
+            height: $landscapeSize,
+            width: $landscapeSize
         ));
+        @include rounded-corners($landscapeSize/2);
     }
 }
 

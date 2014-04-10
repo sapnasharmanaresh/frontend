@@ -182,11 +182,11 @@
     .i.i-arrow-white-down {
         background-position: 3px 6px;
         background-color: $c-newsDefault;
-        @include rounded-corners(100%);
         margin-right: $gs-gutter/5;
         padding: $gs-baseline/3 $gs-gutter/5;
         width: 8px;
         height: 8px;
+        @include rounded-corners(4px);
         float: left;
         @include transform(rotate(-90deg));
         background-size: 10px 5px;
@@ -300,15 +300,16 @@
         padding-left: map-get($cta-diameter, tablet)+5;
     }
     .commercial__home-link__cta {
+        $size: map-get($cta-diameter, mobile);
         position: absolute;
         top: 50%;
         left: 0;
-        width: map-get($cta-diameter, mobile);
-        height: map-get($cta-diameter, mobile);
+        width: $size;
+        height: $size;
         margin-top: -(map-get($cta-diameter, mobile)/2);
         background-position: center;
         background-color: $c-newsDefault;
-        @include rounded-corners(50%);
+        @include rounded-corners($size/2);
 
         @include mq(tablet) {
             width: map-get($cta-diameter, tablet);

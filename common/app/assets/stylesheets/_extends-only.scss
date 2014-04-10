@@ -39,9 +39,9 @@
     overflow: hidden;
     width: 30px;
     height: 30px;
+    @include rounded-corners(15px);
     border: 1px solid $c-neutral1;
     padding: 0;
-    @include rounded-corners(50%);
     @include box-sizing(content-box); // Force proper sizing on button elements
     background-color: transparent;
 

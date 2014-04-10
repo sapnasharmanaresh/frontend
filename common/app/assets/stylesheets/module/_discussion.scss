@@ -193,7 +193,7 @@ $c-replyText: $c-body;
         width: $avatarSize,
         height: $avatarSize
     ));
-    @include rounded-corners(50%);
+    @include rounded-corners($avatarSize/2);
     overflow: hidden;
 }
 .d-comment__meta-text,
@@ -896,7 +896,7 @@ $c-replyText: $c-body;
     @include fs-data(4);
 }
 .person__avatar {
-    @include rounded-corners(50%);
+    @include rounded-corners(18px);
     overflow: hidden;
     float: left;
     @include rem((
