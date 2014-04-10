@@ -41,6 +41,13 @@ module.exports = function (grunt) {
             }
         },
 
+        concat: {
+            common: {
+                src: ['common/app/assets/javascripts/components/curl/dist/curl-with-js-and-domReady/curl.js', 'common/app/assets/javascripts/bootstraps/app.js'],
+                dest: 'common/app/assets/javascripts/bootstraps/curl-and-app.js'
+            }
+        },
+
         requirejs: {
             options: {
                 paths: {
@@ -65,7 +72,7 @@ module.exports = function (grunt) {
             common: {
                 options: {
                     baseUrl: 'common/app/assets/javascripts',
-                    name: 'common/bootstraps/app',
+                    name: 'bootstraps/curl-and-app',
                     out: staticTargetDir + 'javascripts/bootstraps/app.js',
                     shim: {
                         imager: {
@@ -75,10 +82,6 @@ module.exports = function (grunt) {
                         omniture: {
                             exports: 's'
                         }
-                    },
-                    wrap: {
-                        startFile: 'common/app/assets/javascripts/components/curl/dist/curl-with-js-and-domReady/curl.js',
-                        endFile:   'common/app/assets/javascripts/bootstraps/go.js'
                     }
                 }
             },
@@ -677,6 +680,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-asset-monitor');
     grunt.loadNpmTasks('grunt-text-replace');
 
@@ -720,6 +724,7 @@ module.exports = function (grunt) {
             if (grunt.config('copy')['javascript-' + app]) {
                 grunt.task.run('copy:javascript-' + app);
             }
+            if(app === 'common') { grunt.task.run('concat:' + app); }
             grunt.task.run('requirejs:' + app);
         });
         if (!isDev) {

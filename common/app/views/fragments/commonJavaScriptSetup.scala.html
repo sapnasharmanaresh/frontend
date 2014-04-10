@@ -145,4 +145,10 @@
     })(guardian.isModernBrowser);
 </script>
 
-<script async="async" src="@Static("javascripts/bootstraps/app.js")"></script>
+<script async="async" src="@Static("javascripts/bootstraps/app.js")">
+    require(['common/bootstraps/app'], function(bootstrap) {
+        if (guardian.isModernBrowser) {
+            bootstrap.go();
+        }
+    });
+</script>
