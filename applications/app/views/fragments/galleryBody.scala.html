@@ -11,6 +11,7 @@
          itemscope itemtype="@gallery.schemaType" role="main">
         <div class="article__inner article__inner--head">
             <header class="article__head">
+                @fragments.meta.seriesInline(gallery)
                 @fragments.headline(gallery.headline)
 
                 @if(gallery.isCommentable) {
@@ -79,7 +80,10 @@
     </article>
 </div>
 
+
 @fragments.storyPackagePlaceholder(storyPackage)
+
+@fragments.onwardPlaceholder(VisualTone(gallery))
 
 @fragments.mostPopularPlaceholder(gallery.section, VisualTone(gallery))
 

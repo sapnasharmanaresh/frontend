@@ -12,6 +12,7 @@
                  itemprop="mainContentOfPage" itemscope itemtype="@image.schemaType" role="main">
             <div class="article__inner article__inner--head">
                 <header class="article__head">
+                    @fragments.meta.seriesInline(image)
                     @fragments.headline(image.headline)
 
                     @fragments.standfirst(image)
@@ -30,7 +31,7 @@
 
                     @fragments.contentMeta(image)
 
-                    <div class="social-wrapper">
+                    <div class="social-wrapper" data-component="share">
                         @fragments.social(image)
                     </div>
                 </div>
@@ -56,7 +57,10 @@
         }
     </div>
 
+
     @fragments.storyPackagePlaceholder(storyPackage)
+
+    @fragments.onwardPlaceholder(VisualTone(image))
 
     @fragments.mostPopularPlaceholder(image.section, VisualTone(image))
 }
