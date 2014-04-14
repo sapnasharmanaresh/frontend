@@ -5,7 +5,7 @@ import common.ExecutionContexts
 import services.{IdentityRequest, IdRequestParser, IdentityUrlBuilder}
 import com.google.inject.{Inject, Singleton}
 import utils.SafeLogging
-import model.{Cached, IdentityPage}
+import model.{Cached, NoCache, IdentityPage}
 import idapiclient.IdApiClient
 import actions.AuthActionWithUser
 import play.filters.csrf.{CSRFCheck, CSRFAddToken}
@@ -20,6 +20,7 @@ import client.Response
 
 @Singleton
 class PublicProfileController @Inject()(idUrlBuilder: IdentityUrlBuilder,
+                                        authActionWithUser: AuthActionWithUser,
                                         identityApiClient: IdApiClient,
                                         idRequestParser: IdRequestParser
                                       )
@@ -82,22 +83,36 @@ class PublicProfileController @Inject()(idUrlBuilder: IdentityUrlBuilder,
 
   def renderPublicProfilePage(url: String, futureUser: => Future[Response[User]]) = Action.async {
     implicit request =>
+//      futureUser flatMap {
+//        case Left(errors) =>
+//          logger.info(s"public profile page returned errors ${errors.toString()}")
+//          NotFound(views.html.errors._404())
+//
+//        case Right(user) =>
+//          val idRequest = idRequestParser(request)
+//
+//          for {
+//            comments <- discussionApi.commentsForUser(user.getId())
+//          } yield {
+//            Cached(60)(Ok(views.html.public_profile_page(page, idRequest, idUrlBuilder, user, comments)))
+//          }
+//
+//          //Cached(60)(Ok(views.html.public_profile_page(page, idRequest, idUrlBuilder, user)))
+//          Cached(60)(Ok(views.html.public_profile_page(page(url), idRequest, idUrlBuilder, user)))
+
       futureUser flatMap {
-        case Left(errors) =>
-          logger.info(s"public profile page returned errors ${errors.toString()}")
-          NotFound(views.html.errors._404())
-
-        case Right(user) =>
+        case Right(user: User) => {
+          val comments = discussionApi.commentsForUser(user.getId())
           val idRequest = idRequestParser(request)
+          comments map { commentList =>
+            Cached(60)(Ok(views.html.public_profile_page(page, idRequest, idUrlBuilder, user, commentList)))
 
-          for {
-            comments <- discussionApi.commentsForUser(user.getId())
-          } yield {
-            Cached(60)(Ok(views.html.public_profile_page(page, idRequest, idUrlBuilder, user, comments)))
           }
-
-          //Cached(60)(Ok(views.html.public_profile_page(page, idRequest, idUrlBuilder, user)))
-          Cached(60)(Ok(views.html.public_profile_page(page(url), idRequest, idUrlBuilder, user)))
+        }
+        case Left(errors) => {
+          logger.info(s"public profile page returned errors ${errors.toString()}")
+          Future.successful(NotFound(views.html.errors._404()))
+        }
       }
   }
 

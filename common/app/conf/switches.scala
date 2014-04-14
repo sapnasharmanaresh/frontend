@@ -241,7 +241,13 @@ object Switches extends Collections {
 
   val IdentityEthicalAwardsSwitch = Switch("Feature Switches", "id-ethical-awards",
     "If this switch is on, Ethical awards forms will be available",
-    safeState = Off, sellByDate = new DateMidnight(2014, 5, 15))
+    safeState = Off, sellByDate = new DateMidnight(2014, 5, 15)
+  )
+
+  val IdentityCommentHistory = Switch("Feature Switches", "id-comment-history",
+    "If this switch is on, comment history will be displayed on the public profile pages of users",
+    safeState = Off, sellByDate = never
+  )
 
   val NetworkFrontOptIn = Switch("Feature Switches", "network-front-opt-in",
     "If this is switched on then an opt-in message will be displayed to users coming from the R2 network front",
@@ -407,6 +413,7 @@ object Switches extends Collections {
     FacebookAutoSigninSwitch,
     IdentityFormstackSwitch,
     IdentityEthicalAwardsSwitch,
+    IdentityCommentHistory,
     ABBlendedContainersUk,
     ABBlendedContainersUs,
     ABBlendedContainersAu,
