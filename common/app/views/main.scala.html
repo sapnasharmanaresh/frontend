@@ -1,26 +1,12 @@
 @(metaData: model.MetaData, projectName: Option[String] = None, curlPaths: Map[String, String] = Map())(head: Html)(body: Html)(implicit request: RequestHeader)
 @import conf.Switches._
 
-@* Identity pages use identityMain.scala.html, most of which is shared fragments,
-   be sure to apply any necessary changes to non-shared code there too. *@
-
-<!DOCTYPE html>
-<html class="js-off id--signed-out" lang="en-GB">
-<head>
-    @fragments.head(metaData, projectName, head, curlPaths)
-</head>
-<body
-    @Navigation.topLevelItem(Edition(request).navigation(metaData), metaData).filter(_.links.nonEmpty).map{ localNav => class="has-localnav" }
-    id="top"
-    itemscope itemtype="http://schema.org/WebPage">
-
-    @fragments.message(metaData)
-
-    @fragments.header(metaData)
+@base(metaData, projectName, curlPaths){
+}{
 
     <div id="js-context" class="gs-container">
         <div class="top-banner-ad-container">
-            @fragments.commercial.standardAd(name="top", adType="top-banner-ad", sizeMapping=Map("mobile" -> Seq("300,50", "320,50"), "tabletportrait" -> Seq("728,90"), "tabletlandscape" -> Seq("728,90", "900,250")), showLabel=false)
+        @fragments.commercial.standardAd(name="top", adType="top-banner-ad", sizeMapping=Map("mobile" -> Seq("300,50", "320,50"), "tabletportrait" -> Seq("728,90"), "tabletlandscape" -> Seq("728,90", "900,250")), showLabel=false)
         </div>
 
         @fragments.localNav(metaData)
@@ -28,10 +14,6 @@
         @body
     </div>
 
-    @fragments.footer(metaData)
+}
 
-    @fragments.loadCss()
 
-    @fragments.analytics(metaData)
-</body>
-</html>

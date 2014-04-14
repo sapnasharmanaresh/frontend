@@ -42,3 +42,51 @@
         }
     }
 }
+
+$tone-banners: (
+    liveblog: #d13d54
+);
+
+.tone-banner {
+    @each $tone, $colour in $tone-banners {
+        &.tone-banner--#{$tone} {
+            background-color: $colour;
+        }
+    }
+    color: white;
+    padding-top: $gs-baseline/2;
+}
+.tone-banner__headline {
+    color: white;
+    font-weight: normal;
+}
+
+.tone-banner__section {
+    @include fs-header(3);
+    .tone-banner__section-link {
+        color: white;
+    }
+    float: left;
+}
+
+.tone-banner .byline {
+    @include fs-bodyCopy(2);
+    font-weight: normal;
+    color: white;
+    border-top: 1px solid #FA99A8;
+    margin-top: $gs-baseline*3;
+    min-height: initial;
+    margin-bottom: 0;
+    padding-bottom: 0;
+
+
+    a {
+        color: white;
+        font-weight: bold;
+    }
+}
+
+.tone-banner .article__dateline{
+    color: white;
+    border-top: 0;
+}

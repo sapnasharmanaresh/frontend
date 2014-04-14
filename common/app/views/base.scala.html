@@ -1,0 +1,29 @@
+@(metaData: model.MetaData, projectName: Option[String] = None, curlPaths: Map[String, String] = Map())(head: Html)(body: Html)(implicit request: RequestHeader)
+@import conf.Switches._
+
+@* Identity pages use identityMain.scala.html, most of which is shared fragments,
+be sure to apply any necessary changes to non-shared code there too. *@
+
+<!DOCTYPE html>
+<html class="js-off id--signed-out" lang="en-GB">
+    <head>
+    @fragments.head(metaData, projectName, head, curlPaths)
+    </head>
+    <body
+        @Navigation.topLevelItem(Edition(request).navigation(metaData), metaData).filter(_.links.nonEmpty).map{ localNav => class="has-localnav" }
+    id="top"
+    itemscope itemtype="http://schema.org/WebPage">
+
+        @fragments.message(metaData)
+
+        @fragments.header(metaData)
+
+        @body
+
+        @fragments.footer(metaData)
+
+        @fragments.loadCss()
+
+        @fragments.analytics(metaData)
+    </body>
+</html>
