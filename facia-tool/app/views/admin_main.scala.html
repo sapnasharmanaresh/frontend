@@ -69,6 +69,7 @@
             <a class="log-in-out" href="/logout">Logout</a>
             @content
         } else {
+            @content
             <form action="@routes.Login.loginPost()" method="post" class="login-form tools">
                 <input value="Log In" class="tool" type="submit" id="login-button">
             </form>
