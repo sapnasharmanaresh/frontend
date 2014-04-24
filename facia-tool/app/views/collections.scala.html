@@ -17,7 +17,13 @@
         <i class="icon-remove icon-white" data-bind="click: clearStatuses"></i>
     </div>
 
-    <div class="toolbar" data-bind="visible: true" style="display: none">
+    <div class="toolbar" style="display: none" data-bind="
+        css: {
+            uk: front() === 'uk',
+            us: front() === 'us',
+            au: front() === 'au'
+        },
+        visible: true">
 
         <span data-bind="if: fronts().length > 1">
             <span class="tool-label">Front</span>

@@ -608,6 +608,18 @@ button {
     margin-bottom: 20px;
 }
 
+.toolbar.uk {
+    background-color: #ccf;
+}
+
+.toolbar.us {
+    background-color: #fcc;
+}
+
+.toolbar.au {
+    background-color: #cfc;
+}
+
 .toolbar .spark {
     display: inline-block;
     margin: -2px 15px 0 0;
