@@ -111,7 +111,8 @@ object FrontsController extends Controller with ExecutionContexts with GetPaClie
   }
 
   private def host(implicit request: RequestHeader): String = {
-    if (Configuration.sport.apiUrl.isEmpty) s"http://${request.host}"
-    else Configuration.sport.apiUrl
+    Configuration.sport.apiUrl.flatMap {
+      url => if (url.isEmpty) None else Some(url)
+    }.getOrElse(s"http://${request.host}")
   }
 }
