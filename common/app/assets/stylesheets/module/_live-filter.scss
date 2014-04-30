@@ -14,8 +14,8 @@
         font-size: .875em;
     }
 
-    @include mq(rightCol) {
-        border-top: 1px solid $c-neutral3;
+    @include mq(leftCol) {
+        margin-bottom: 0;
     }
 }
 
