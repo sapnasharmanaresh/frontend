@@ -19,7 +19,7 @@
                 template: {name: 'template_collection', foreach: items}"></div>
         </div>
 
-        <div class="title">Orphaned collections</div>
+        <div class="title">Orphaned containers</div>
         <div class="scrollable cnf-collections" data-bind="
             template: {name: 'template_collection', foreach: orphans}"></div>
     </div>
@@ -138,9 +138,9 @@
             <!-- ko if: !id() -->
                 <div class="cnf-form">
                     <label>Type</label>
-                    <input type="radio" name="collectionType" value="" data-bind="checkedValue: undefined, checked: props.type" />
+                    <input type="radio" name="group01" data-bind="checkedValue: undefined, checked: props.priority" />
                     <span class="radio-label">editorial</span>
-                    <input type="radio" name="collectionType" value="commercial" data-bind="checked: props.type" />
+                    <input type="radio" name="group01" value="commercial" data-bind="checked: props.priority" />
                     <span class="radio-label">commercial</span>
 
                     <label>URL path</label>
@@ -161,24 +161,24 @@
                             value: props.section"/>
 
                         <label>Name</label>
-                        <input type="text" placeholder="eg. Middle East" data-bind="
-                            attr: {placeholder: placeholders.name},
-                            value: props.name"/>
-
-                        <label>Web Title</label>
-                        <input type="text" placeholder="eg. Middle East news, travel guides and reviews" data-bind="
+                        <input type="text" data-bind="
                             attr: {placeholder: placeholders.webTitle},
                             value: props.webTitle"/>
 
+                        <label>SEO Title</label>
+                        <textarea data-bind="
+                            attr: {placeholder: placeholders.title},
+                            value: props.title"></textarea>
+
                         <label>Description</label>
-                        <input type="text" placeholder="eg. Latest Middle East news, travel guides and reviews" data-bind="
+                        <textarea data-bind="
                             attr: {placeholder: placeholders.description},
-                            value: props.description"/>
+                            value: props.description"></textarea>
 
                         <label>Type</label>
-                        <input type="radio" name="collectionType" value="" data-bind="checkedValue: undefined, checked: props.type" />
+                        <input type="radio" name="group02" data-bind="checkedValue: undefined, checked: props.priority" />
                         <span class="radio-label">editorial</span>
-                        <input type="radio" name="collectionType" value="commercial" data-bind="checked: props.type" />
+                        <input type="radio" name="group02" value="commercial" data-bind="checked: props.priority" />
                         <span class="radio-label">commercial</span>
 
                         <div class="tools">
