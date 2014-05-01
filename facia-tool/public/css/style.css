@@ -885,11 +885,6 @@ button {
     display: none;
 }
 
-.cnf-form {
-    overflow: auto;
-    margin: 0 0 5px 0;
-}
-
 .cnf-collection .cnf-form {
     margin-left: 20px;
 }
@@ -922,22 +917,9 @@ button {
     margin: 0 0 2px 0;
 }
 
-.cnf-form .advanced-options {
-    clear: both;
-    font-size: 10px;
-}
-
 .cnf-form .tools {
     padding: 10px 0;
     clear: left;
-}
-
-.cnf-form .tools-advanced {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    font-size: 12px;
-    color: #CCCCCC;
 }
 
 .cnf-form .api-query-status {

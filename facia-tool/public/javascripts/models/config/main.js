@@ -65,6 +65,7 @@ define([
 
             if (vars.model.fronts().length <= vars.CONST.maxFronts) {
                 front = new Front();
+                front.setOpen(true);
                 model.pinnedFront(front);
                 model.fronts.unshift(front);
             } else {

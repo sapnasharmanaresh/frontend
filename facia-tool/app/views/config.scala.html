@@ -136,7 +136,7 @@
                 click: toggleOpen"></div>
 
             <!-- ko if: !id() -->
-                <div class="cnf-form">
+                <div class="cnf-front__inner cnf-form">
                     <label>Type</label>
                     <input type="radio" name="group01" data-bind="checkedValue: undefined, checked: props.priority" />
                     <span class="radio-label">editorial</span>
@@ -187,7 +187,7 @@
                     </div>
                 <!-- /ko -->
 
-                <!-- ko ifnot: state.isOpenProps -->
+                <!-- ko if: !state.isOpenProps() && id() -->
                     <div class="instructions">
                         <span class="linky" data-bind="click: openProps">Edit metadata</span>
                     </div>
