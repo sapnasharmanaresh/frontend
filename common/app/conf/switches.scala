@@ -368,10 +368,6 @@ object Switches extends Collections {
     safeState = Off, sellByDate = never
   )
 
-  val AutoSeoSwitch = Switch("Facia Switches", "auto-seo-switch",
-    "If this switch is on then the SEO elements for pages will be automatically generated from keyword and title",
-    safeState = Off, sellByDate = new DateMidnight(2014, 5, 30)
-  )
   // Image Switch
 
   val ImageServerSwitch = Switch("Image Server", "image-server",
@@ -439,7 +435,6 @@ object Switches extends Collections {
     ABHomeComponent,
     MemcachedSwitch,
     IncludeBuildNumberInMemcachedKey,
-    AutoSeoSwitch,
     GzipSwitch
   )
 

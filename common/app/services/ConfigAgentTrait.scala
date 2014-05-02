@@ -69,16 +69,4 @@ trait ConfigAgentTrait extends ExecutionContexts {
   def close() = configAgent.close()
 
   def contentsAsJsonString: String = Json.prettyPrint(configAgent.get)
-
-  case class FrontConfig(keyword: Option[String], webTitle: Option[String])
-
-  def getFrontConfig(path: String): FrontConfig = {
-    val json = configAgent.get()
-    (json \ "fronts" \ path).asOpt[JsValue].map { frontJson =>
-      FrontConfig(
-        keyword   = (frontJson \ "keyword").asOpt[String].filter(_.nonEmpty),
-        webTitle  = (frontJson \ "webTitle").asOpt[String].filter(_.nonEmpty)
-      )
-    }
-  }.getOrElse(FrontConfig(None, None)) //Default
 }
