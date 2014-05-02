@@ -151,6 +151,7 @@ define([
                 collections:
                    _.chain(model.collections())
                     .filter(function(collection) { return collection.id; })
+                    .filter(function(collection) { return collection.parents().length > 0; })
                     .reduce(function(collections, collection) {
                         collections[collection.id] =
                            _.reduce(collection.meta, function(acc, val, key) {
@@ -180,9 +181,10 @@ define([
                     vars.state.config = config;
 
                     model.collections(
-                       _.map(config.collections, function(obj, cid) {
-                            return new Collection(cloneWithKey(obj, cid));
-                        })
+                       _.chain(config.collections)
+                        .map(function(obj, cid) { return new Collection(cloneWithKey(obj, cid)); })
+                        .sortBy(function(collection) { return collection.meta.displayName(); })
+                        .value()
                     );
 
                     model.fronts(
