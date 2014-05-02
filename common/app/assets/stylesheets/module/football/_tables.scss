@@ -144,3 +144,105 @@
         float: right;
     }
 }
+
+
+// WALLCHART
+.football-wallchart {
+    @include fs-data(4);
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    .football-round,
+    .football-round__matches,
+    .football-round__match-container {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .football-round__match {
+        flex: 1 1 auto;
+    }
+
+    .football-match {
+        @include rem((
+            padding: $gs-baseline*2 0
+        ));
+        border-right: 1px solid $c-neutral2;
+        margin: auto 0;
+        text-align: center;
+    }
+
+    .football-match__team {
+        @include rem((
+            padding: $gs-baseline/6 $gs-gutter/4
+        ));
+        border: 1px solid $c-neutral2;
+        border-top: 0;
+        display: block;
+        float: none;
+        padding: 0;
+        text-align:center;
+        width: 100%;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
